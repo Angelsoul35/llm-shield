@@ -7,6 +7,12 @@ verdict with a risk score and the specific detections behind it. It is designed
 to sit in front of any model, add sub-millisecond latency, run fully offline, and
 explain every decision.
 
+[![CI](https://img.shields.io/badge/CI-GitHub%20Actions-blue)](.github/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue)](pyproject.toml)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+---
+
 ## Threat model
 
 llm-shield addresses the input/output risks that do not require touching the
