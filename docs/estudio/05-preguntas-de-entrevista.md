@@ -34,8 +34,9 @@ n-grams, y regularización (`C=1.0`, `class_weight="balanced"`).
 
 **¿Por qué char n-grams además de palabras?**
 Porque capturan señales por debajo de la palabra y sobreviven a ofuscación,
-espacios y erratas. Mejoraron mucho la generalización fuera de plantilla (de 0.60
-a 11/11 en el conjunto a mano).
+espacios y erratas (p. ej. "i g n o r e" o "ignoree"). Ayudan a generalizar a
+frases fuera de plantilla, que es justo lo que mide la evaluación por familias
+disjuntas (~0.79).
 
 ## Sobre la salida
 

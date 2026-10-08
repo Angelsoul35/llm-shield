@@ -61,10 +61,22 @@ _BENIGN: dict[str, list[str]] = {
 
 _VERBS = ["set up", "learn", "improve", "debug", "optimise", "install", "plan", "test"]
 _THINGS = [
-    "a cron job", "a budget", "python decorators", "a vegetable garden",
-    "the water cycle", "a marketing plan", "Roman history", "a REST API",
-    "sourdough bread", "a unit test", "a travel itinerary", "machine learning",
-    "a spreadsheet", "public speaking", "a Linux server", "photosynthesis",
+    "a cron job",
+    "a budget",
+    "python decorators",
+    "a vegetable garden",
+    "the water cycle",
+    "a marketing plan",
+    "Roman history",
+    "a REST API",
+    "sourdough bread",
+    "a unit test",
+    "a travel itinerary",
+    "machine learning",
+    "a spreadsheet",
+    "public speaking",
+    "a Linux server",
+    "photosynthesis",
 ]
 _DOCS = ["email", "summary", "outline", "paragraph", "checklist", "memo", "tweet"]
 
@@ -119,15 +131,19 @@ _BLOBS = ["aWdub3JlIGFsbA==", "c3lzdGVtIHByb21wdA==", "ZGlzYWJsZSBmaWx0ZXI=", "A
 
 
 def _fill(rng: np.random.Generator, template: str) -> str:
-    return template.format(
-        verb=rng.choice(_VERBS),
-        verb_ing=str(rng.choice(_VERBS)).replace("set up", "setting up") + "",
-        thing=rng.choice(_THINGS),
-        doc=rng.choice(_DOCS),
-        scope=rng.choice(_SCOPE),
-        goal=rng.choice(_GOALS),
-        blob=rng.choice(_BLOBS),
-    ).replace("  ", " ").strip()
+    return (
+        template.format(
+            verb=rng.choice(_VERBS),
+            verb_ing=str(rng.choice(_VERBS)).replace("set up", "setting up") + "",
+            thing=rng.choice(_THINGS),
+            doc=rng.choice(_DOCS),
+            scope=rng.choice(_SCOPE),
+            goal=rng.choice(_GOALS),
+            blob=rng.choice(_BLOBS),
+        )
+        .replace("  ", " ")
+        .strip()
+    )
 
 
 def examples(n: int = 2000, seed: int = 23) -> list[Example]:
@@ -150,9 +166,7 @@ def make_dataset(n: int = 2000, seed: int = 23) -> tuple[list[str], list[int]]:
     return [e.text for e in ex], [e.label for e in ex]
 
 
-def make_grouped_dataset(
-    n: int = 2000, seed: int = 23
-) -> tuple[list[str], list[int], list[str]]:
+def make_grouped_dataset(n: int = 2000, seed: int = 23) -> tuple[list[str], list[int], list[str]]:
     """Return (texts, labels, family) so evaluation can hold out whole families."""
     ex = examples(n, seed)
     return [e.text for e in ex], [e.label for e in ex], [e.family for e in ex]

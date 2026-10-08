@@ -104,7 +104,7 @@ uvicorn llm_shield.main:app --reload                # HTTP API
 Integration pattern:
 
 ```python
-shield = Shield()                                   # trains the classifier once
+shield = Shield()  # trains the classifier once
 inp = shield.scan_input(user_text)
 if inp.verdict == "block":
     return refuse()
@@ -140,11 +140,12 @@ $ python -m llm_shield.evaluation
 ```
 
 So **0.79** is the honest floor against an attack *style* never seen in training
-(e.g. all "extraction" prompts withheld); on a held-out set of hand-written
-prompts that mix familiar attack types the classifier scores 11/11. These two
-figures — a conservative family-disjoint floor and strong real-mix performance —
-are why the design pairs the classifier with deterministic rules and
-operator-tunable thresholds rather than trusting any single number. A production
+(e.g. all "extraction" prompts withheld); on already-familiar attack styles it
+separates malicious from benign cleanly, as the classifier tests assert. The
+conservative family-disjoint figure is the one worth reporting — it is what tells
+you how far the model generalises. And precisely because no single model stops a
+genuinely novel attack, the design pairs the classifier with deterministic rules
+and operator-tunable thresholds rather than trusting any single number. A production
 deployment should retrain on real labelled traffic, where the honest baseline to
 beat is the family-disjoint score, not the within-distribution one.
 

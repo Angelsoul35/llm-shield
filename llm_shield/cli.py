@@ -31,14 +31,14 @@ def demo() -> None:
         r = shield.scan_input(text)
         kinds = ", ".join(sorted({d["detector"] for d in r.detections})) or "none"
         print(f"   [{r.verdict.value.upper():5}] risk {r.risk_score:.2f}  rules: {kinds}")
-        print(f"          \"{text[:70]}\"")
+        print(f'          "{text[:70]}"')
 
     print("3) Scanning outputs (secret / system-prompt leak):")
     for text in OUTPUTS:
         r = shield.scan_output(text)
         kinds = ", ".join(sorted({d["detector"] for d in r.detections})) or "none"
         print(f"   [{r.verdict.value.upper():5}] leaks: {kinds}")
-        print(f"          \"{text[:70]}\"")
+        print(f'          "{text[:70]}"')
 
 
 def scan(text: str) -> None:

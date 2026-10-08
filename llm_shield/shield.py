@@ -76,9 +76,7 @@ class Shield:
         )
 
     def scan_output(self, text: str) -> ScanResult:
-        detections = scan_secrets(text) + scan_prompt_leak(
-            text, self.settings.system_prompt_canary
-        )
+        detections = scan_secrets(text) + scan_prompt_leak(text, self.settings.system_prompt_canary)
         verdict = Verdict.BLOCK if detections else Verdict.ALLOW
         risk = 1.0 if detections else 0.0
         return ScanResult(

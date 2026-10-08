@@ -29,31 +29,69 @@ class Detection:
 # (compiled pattern, name, severity). High-severity patterns are direct attempts
 # to override instructions, extract the system prompt, or disable safety.
 _INJECTION_PATTERNS: list[tuple[re.Pattern[str], str, Severity]] = [
-    (re.compile(r"ignore\s+(all\s+|the\s+|your\s+|any\s+)?(previous|prior|above|earlier)\s+"
-                r"(instructions?|prompts?|messages?|context|rules?)", re.I),
-     "override_instructions", Severity.HIGH),
-    (re.compile(r"disregard\s+(all\s+|the\s+|your\s+)?(previous|prior|above)\s+"
-                r"(instructions?|rules?)", re.I),
-     "override_instructions", Severity.HIGH),
-    (re.compile(r"forget\s+(everything|all|your|the)\s+(instructions?|rules?|above)", re.I),
-     "override_instructions", Severity.HIGH),
-    (re.compile(r"\b(reveal|print|show|repeat|output|tell\s+me)\b.{0,30}"
-                r"(system\s+prompt|initial\s+(prompt|instructions?)|your\s+(instructions?|rules?))",
-                re.I),
-     "system_prompt_extraction", Severity.HIGH),
-    (re.compile(r"\b(you\s+are\s+now|act\s+as|pretend\s+to\s+be)\b.{0,30}"
-                r"(dan|stan|jailbroken|unrestricted|no\s+restrictions|evil)", re.I),
-     "jailbreak_persona", Severity.HIGH),
+    (
+        re.compile(
+            r"ignore\s+(all\s+|the\s+|your\s+|any\s+)?(previous|prior|above|earlier)\s+"
+            r"(instructions?|prompts?|messages?|context|rules?)",
+            re.I,
+        ),
+        "override_instructions",
+        Severity.HIGH,
+    ),
+    (
+        re.compile(
+            r"disregard\s+(all\s+|the\s+|your\s+)?(previous|prior|above)\s+"
+            r"(instructions?|rules?)",
+            re.I,
+        ),
+        "override_instructions",
+        Severity.HIGH,
+    ),
+    (
+        re.compile(r"forget\s+(everything|all|your|the)\s+(instructions?|rules?|above)", re.I),
+        "override_instructions",
+        Severity.HIGH,
+    ),
+    (
+        re.compile(
+            r"\b(reveal|print|show|repeat|output|tell\s+me)\b.{0,30}"
+            r"(system\s+prompt|initial\s+(prompt|instructions?)|your\s+(instructions?|rules?))",
+            re.I,
+        ),
+        "system_prompt_extraction",
+        Severity.HIGH,
+    ),
+    (
+        re.compile(
+            r"\b(you\s+are\s+now|act\s+as|pretend\s+to\s+be)\b.{0,30}"
+            r"(dan|stan|jailbroken|unrestricted|no\s+restrictions|evil)",
+            re.I,
+        ),
+        "jailbreak_persona",
+        Severity.HIGH,
+    ),
     (re.compile(r"\bdo\s+anything\s+now\b", re.I), "jailbreak_persona", Severity.HIGH),
-    (re.compile(r"\bbypass\b.{0,20}(safety|content|policy|filter|guardrail|restriction)", re.I),
-     "bypass_safety", Severity.HIGH),
+    (
+        re.compile(r"\bbypass\b.{0,20}(safety|content|policy|filter|guardrail|restriction)", re.I),
+        "bypass_safety",
+        Severity.HIGH,
+    ),
     (re.compile(r"\bdeveloper\s+mode\b", re.I), "jailbreak_persona", Severity.MEDIUM),
-    (re.compile(r"</?\s*(system|instructions?|assistant)\s*>", re.I),
-     "delimiter_injection", Severity.MEDIUM),
-    (re.compile(r"\b(pretend|imagine|roleplay|role-play)\b.{0,20}\b(you|that)\b", re.I),
-     "roleplay", Severity.MEDIUM),
-    (re.compile(r"\bwithout\s+(any\s+)?(restrictions?|rules?|limitations?|filters?)\b", re.I),
-     "bypass_safety", Severity.MEDIUM),
+    (
+        re.compile(r"</?\s*(system|instructions?|assistant)\s*>", re.I),
+        "delimiter_injection",
+        Severity.MEDIUM,
+    ),
+    (
+        re.compile(r"\b(pretend|imagine|roleplay|role-play)\b.{0,20}\b(you|that)\b", re.I),
+        "roleplay",
+        Severity.MEDIUM,
+    ),
+    (
+        re.compile(r"\bwithout\s+(any\s+)?(restrictions?|rules?|limitations?|filters?)\b", re.I),
+        "bypass_safety",
+        Severity.MEDIUM,
+    ),
 ]
 
 # Likely secrets if they appear in model OUTPUT.
@@ -82,8 +120,11 @@ def scan_injection(text: str) -> list[Detection]:
                 )
     if _BASE64_BLOB.search(text):
         detections.append(
-            Detection(detector="encoded_payload", severity=Severity.MEDIUM,
-                      detail="long base64-like blob that may hide an encoded payload")
+            Detection(
+                detector="encoded_payload",
+                severity=Severity.MEDIUM,
+                detail="long base64-like blob that may hide an encoded payload",
+            )
         )
     return detections
 
@@ -104,7 +145,10 @@ def scan_prompt_leak(text: str, canary: str) -> list[Detection]:
     """Detect the system-prompt canary leaking into output."""
     if canary and canary in text:
         return [
-            Detection(detector="system_prompt_leak", severity=Severity.HIGH,
-                      detail="system-prompt canary found in output")
+            Detection(
+                detector="system_prompt_leak",
+                severity=Severity.HIGH,
+                detail="system-prompt canary found in output",
+            )
         ]
     return []

@@ -12,10 +12,13 @@ generalización. Un guardarraíl que presuma de ese 1.0 da falsa confianza y
 esconde sus debilidades reales (falsos positivos en texto benigno, ataques nuevos
 no detectados).
 
-De hecho, una primera versión de este proyecto tenía exactamente ese problema:
-validación cruzada 1.000 ± 0.000, pero en frases escritas a mano (fuera de
-plantilla) la exactitud real era **0.60**. El modelo había memorizado el
-vocabulario de las plantillas.
+El síntoma es inconfundible: una validación cruzada de 1.000 ± 0.000 sobre datos
+de plantilla que se desploma en cuanto evalúas frases con una estructura que el
+modelo no vio en entrenamiento. La exactitud "perfecta" solo medía que train y
+test salían del mismo molde; el modelo había memorizado el vocabulario de las
+plantillas, no aprendido a reconocer un ataque. Por eso este proyecto se mide con
+un split por **familias disjuntas** (más abajo), que no deja que eso pase
+desapercibido.
 
 ## Overfitting vs underfitting (recordatorio)
 
@@ -62,11 +65,14 @@ train accuracy   : 1.00
 train-test gap   : 0.21    # acotada -> regularizado, no sobreajuste patológico
 ```
 
-Ese **0.79** es el suelo honesto frente a un **estilo** de ataque nunca visto. En
-un conjunto escrito a mano que mezcla tipos de ataque conocidos, el clasificador
-acierta 11/11. Reportamos las **dos** cifras: el suelo conservador por familias y
-el buen desempeño en mezcla realista. Por eso el diseño combina el clasificador
-con reglas y umbrales: no confía en un único número.
+Ese **0.79** es el suelo honesto frente a un **estilo** de ataque nunca visto —el
+caso difícil—. Sobre estilos de ataque ya conocidos (en distribución) el
+clasificador separa bien lo malicioso de lo benigno, como comprueban las pruebas
+de `test_classifier.py`. La cifra que reportamos es la conservadora, la de
+familias disjuntas: es la que de verdad dice cuánto generaliza. Y justo porque un
+solo modelo nunca basta contra ataques nuevos, el diseño lo combina con reglas
+deterministas y umbrales — defensa en profundidad, no confianza en un único
+número.
 
 ## La lección
 

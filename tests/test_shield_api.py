@@ -60,9 +60,7 @@ def test_api(shield):
     assert blocked.status_code == 200
     assert blocked.json()["verdict"] == "block"
 
-    out = client.post(
-        "/scan/output", json={"text": "key sk-ABCDEF0123456789ABCDEF0123456789"}
-    )
+    out = client.post("/scan/output", json={"text": "key sk-ABCDEF0123456789ABCDEF0123456789"})
     assert out.json()["verdict"] == "block"
 
     assert client.post("/scan/input", json={"text": ""}).status_code == 422
