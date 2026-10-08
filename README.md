@@ -185,4 +185,4 @@ Nothing in the tests touches a network.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+[MIT](LICENSE) © Angelo David Padilla Romero
