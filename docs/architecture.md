@@ -18,11 +18,15 @@ them, and the honest evaluation behind the reported numbers.
 
 ## Data flow
 
-```
- user input ─▶ scan_injection() (rules) ┐
-                                         ├─▶ verdict = f(severity floor, p, thresholds)
-             ─▶ classifier.p(injection) ┘
- model output ─▶ scan_secrets() + scan_prompt_leak(canary) ─▶ block if any hit
+```mermaid
+flowchart LR
+    IN["user input"] --> R["scan_injection()<br/>rule detectors"]
+    IN --> C["classifier<br/>p(injection)"]
+    R --> V{"verdict = f(severity floor,<br/>p, thresholds)"}
+    C --> V
+    V --> OUT1["allow / flag / block"]
+    MO["model output"] --> S["scan_secrets() +<br/>scan_prompt_leak(canary)"]
+    S --> OUT2["block if any hit"]
 ```
 
 ## Defence in depth: why two layers
