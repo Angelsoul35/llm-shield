@@ -2,7 +2,7 @@
 
 llm-shield inspects the two text boundaries of an LLM call and returns a verdict.
 This document describes the detectors, the classifier, the scoring that combines
-them, and the honest evaluation behind the reported numbers.
+them, and the leakage-free evaluation behind the reported numbers.
 
 ## The pieces
 
@@ -85,7 +85,7 @@ uses a **canary**: a token embedded in the application's system prompt. If the
 canary appears in output, the system prompt leaked — a reliable signal with no
 false positives, far better than trying to fuzzy-match the prompt text.
 
-## Honest evaluation
+## Leakage-free evaluation
 
 `evaluation.py` holds out whole prompt *families* from training, so the test set
 contains attack and benign *structures* never seen during fitting. It reports the

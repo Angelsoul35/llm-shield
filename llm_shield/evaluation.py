@@ -1,4 +1,4 @@
-"""Honest evaluation of the injection classifier.
+"""Leakage-free evaluation of the injection classifier.
 
 Within-distribution accuracy on templated data is misleadingly high, so this
 module measures what actually matters:

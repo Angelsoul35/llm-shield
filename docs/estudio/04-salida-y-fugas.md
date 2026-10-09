@@ -39,7 +39,7 @@ system prompt se filtró, porque el canario no existe en ningún otro sitio.
   falsos positivos ni negativos para una fuga literal, en O(n).
 - **Sin el prompt en el detector:** solo necesita el canario, no el texto
   sensible.
-- **Límite honesto:** atrapa la fuga del prompt **tal como está escrito**; un
+- **Límite riguroso:** atrapa la fuga del prompt **tal como está escrito**; un
   modelo que parafrasee sus instrucciones sin emitir el canario lo evadiría. Por
   eso el canario se coloca donde una fuga lo arrastraría (cerca del inicio del
   prompt) y se complementa con los detectores de secretos y con no poner datos

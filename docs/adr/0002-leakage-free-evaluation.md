@@ -1,4 +1,4 @@
-# ADR 0002: Honest evaluation over a family-disjoint split
+# ADR 0002: Leakage-free evaluation over a family-disjoint split
 
 ## Status
 
@@ -38,7 +38,7 @@ within-distribution one.
   bounded by a test; a blown-out gap would fail CI.
 - **Weaknesses are visible.** Holding out whole attack families surfaces exactly
   where the model is blind, which is why the rules and thresholds exist.
-- **Trade-off.** The honest number is much lower and less impressive than ~1.0,
+- **Trade-off.** The leakage-free number is much lower and less impressive than ~1.0,
   and the harder data makes the task genuinely harder. That is the point: a
   defensive tool must be evaluated pessimistically, and the conservative figure is
   the baseline a real deployment's retraining is expected to beat.

@@ -1,4 +1,4 @@
-"""Synthetic benign and injection prompts for training and *honest* evaluation.
+"""Synthetic benign and injection prompts for training and leakage-free evaluation.
 
 The design goal here is to avoid the classic trap of templated synthetic data:
 if train and test are drawn from a handful of templates, a model memorises the

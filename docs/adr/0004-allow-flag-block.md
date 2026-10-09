@@ -32,7 +32,7 @@ The two thresholds (`LS_BLOCK_THRESHOLD`, `LS_FLAG_THRESHOLD`) are configuration
 - **Operator control.** The thresholds move the boundaries without code changes,
   so a high-stakes deployment can widen `block` and a tolerant one can rely on
   `flag`.
-- **Honest about uncertainty.** A probabilistic classifier should not pretend to
+- **Transparent about uncertainty.** A probabilistic classifier should not pretend to
   a binary certainty it does not have; three levels match the real confidence.
 - **Trade-off.** `flag` only helps if the calling application does something with
   it; if ignored, it collapses to `allow`. That is the integrator's

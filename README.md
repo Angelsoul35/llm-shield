@@ -139,15 +139,33 @@ $ python -m llm_shield.evaluation
   train-test gap    : 0.21     # bounded -> regularised, not pathologically overfit
 ```
 
-So **0.79** is the honest floor against an attack *style* never seen in training
+So **0.79** is the leakage-free floor against an attack *style* never seen in training
 (e.g. all "extraction" prompts withheld); on already-familiar attack styles it
 separates malicious from benign cleanly, as the classifier tests assert. The
 conservative family-disjoint figure is the one worth reporting — it is what tells
 you how far the model generalises. And precisely because no single model stops a
 genuinely novel attack, the design pairs the classifier with deterministic rules
-and operator-tunable thresholds rather than trusting any single number. A production
-deployment should retrain on real labelled traffic, where the honest baseline to
-beat is the family-disjoint score, not the within-distribution one.
+and operator-tunable thresholds rather than trusting any single number.
+
+### Validated on real prompt-injection data
+
+The same classifier is benchmarked on **real** attacks — the public
+`deepset/prompt-injections` dataset (662 prompts, vendored under `datasets/`). Run
+`python -m llm_shield.real_benchmark`:
+
+```
+CV accuracy : 0.923 +/- 0.016
+CV F1       : 0.900
+CV ROC-AUC  : 0.975
+train / test: 0.992 / 0.916  (gap 0.076)   -> well-fit
+```
+
+On real prompt injections collected in the wild the word+char TF-IDF + logistic
+classifier reaches **0.92 accuracy / 0.98 ROC-AUC**, cross-validated, with a small
+train/test gap — strong and well-fit, not a memorised 1.0. The synthetic
+family-disjoint evaluation (above) and this real benchmark are complementary: the
+first measures generalisation to unseen *attack styles*, the second confirms the
+approach on real-world prompts.
 
 ## Performance
 
@@ -174,6 +192,8 @@ pytest --cov=llm_shield --cov-report=term-missing --cov-fail-under=80
 ```
 
 Covers each rule detector, the classifier (including a held-out accuracy check),
+the **real-data benchmark** (the deepset loader, the well-fit check on real prompts,
+a shuffled-label collapse to the baseline, the verdict branches and the fetch path),
 the combined verdict logic for input and output (benign, rule-blocked,
 classifier-only-blocked, secret leak, prompt leak), the HTTP API, and the CLI.
 Nothing in the tests touches a network.

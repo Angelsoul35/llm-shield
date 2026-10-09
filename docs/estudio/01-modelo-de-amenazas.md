@@ -22,7 +22,7 @@ las dos fronteras de confianza:
 
 ## Qué NO defiende (y por qué decirlo importa)
 
-Un buen proyecto de seguridad es **honesto sobre su alcance**. llm-shield **no**
+Un buen proyecto de seguridad es **riguroso sobre su alcance**. llm-shield **no**
 es:
 
 - un sustituto de la alineación del propio modelo;

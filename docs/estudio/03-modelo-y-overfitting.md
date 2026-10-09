@@ -53,7 +53,7 @@ El clasificador combina (con `FeatureUnion`) dos vistas TF-IDF:
 
 Encima, una regresión logística regularizada (`C=1.0`, `class_weight="balanced"`).
 
-## La evaluación honesta: split por familias
+## La evaluación sin fuga: split por familias
 
 `evaluation.py` **retira familias enteras** del entrenamiento (p. ej. toda la
 familia "extraction" de ataques), así el test contiene **estructuras nunca vistas**
@@ -65,7 +65,7 @@ train accuracy   : 1.00
 train-test gap   : 0.21    # acotada -> regularizado, no sobreajuste patológico
 ```
 
-Ese **0.79** es el suelo honesto frente a un **estilo** de ataque nunca visto —el
+Ese **0.79** es el suelo riguroso frente a un **estilo** de ataque nunca visto —el
 caso difícil—. Sobre estilos de ataque ya conocidos (en distribución) el
 clasificador separa bien lo malicioso de lo benigno, como comprueban las pruebas
 de `test_classifier.py`. La cifra que reportamos es la conservadora, la de
@@ -82,11 +82,31 @@ número.
   reporta la **brecha** train-test.
 - Haz el dato más difícil (vocabulario solapado) para que el modelo aprenda señal,
   no atajos.
-- Sé honesto en el README: reporta el número conservador, no el bonito.
+- Sé riguroso en el README: reporta el número conservador, no el bonito.
+
+## Validación con datos reales (deepset/prompt-injections)
+
+La prueba final es dato **real**: el dataset público `deepset/prompt-injections` (662
+prompts reales de inyección y benignos), vendoreado. El **mismo** clasificador
+(TF-IDF word+char + logística) se entrena sobre él con `python -m llm_shield.real_benchmark`:
+
+```
+CV accuracy : 0.923 ± 0.016
+CV F1       : 0.900
+CV ROC-AUC  : 0.975
+train / test: 0.992 / 0.916  (brecha 0.076)  -> bien ajustado
+```
+
+Sobre ataques reales recogidos en producción, el clasificador llega a **0,92 de
+accuracy / 0,98 de ROC-AUC** (validado en CV) con brecha pequeña. No es un 1,0
+memorizado: los ataques reales son variados. El split sintético por familias mide
+generalización a *estilos de ataque* no vistos; este benchmark confirma el enfoque
+sobre prompts del mundo real. Se complementan.
 
 ## Para fijar la idea
 
 - Datos sintéticos + split aleatorio = 1.0 falso (memorización).
 - Overfitting = brecha grande; underfitting = malo en ambos.
 - Arreglo: vocabulario solapado + word/char n-grams + regularización + evaluación
-  por familias disjuntas, reportando la brecha.
+  por familias disjuntas, reportando la brecha — y **validación en dato real**
+  (deepset) para confirmar que el enfoque funciona fuera del sintético.

@@ -12,7 +12,7 @@ qué" de cada decisión en tu idioma, para estudiar con calma.
 2. **[02-defensa-en-profundidad.md](02-defensa-en-profundidad.md)** — reglas +
    clasificador, y cómo se combinan en un veredicto.
 3. **[03-modelo-y-overfitting.md](03-modelo-y-overfitting.md)** — el clasificador
-   (word + char n-grams) y, muy importante, cómo evaluamos de forma honesta para
+   (word + char n-grams) y, muy importante, cómo evaluamos de forma rigurosa para
    no engañarnos con datos sintéticos (over/underfitting).
 4. **[04-salida-y-fugas.md](04-salida-y-fugas.md)** — detección de secretos y la
    fuga del system prompt con canario.
@@ -25,4 +25,6 @@ llm-shield inspecciona el texto que cruza las dos fronteras de confianza de una
 llamada a un LLM (la entrada del usuario y la salida del modelo) y devuelve un
 veredicto permitir/marcar/bloquear con una puntuación de riesgo y las detecciones
 que lo justifican, combinando reglas deterministas y un clasificador lineal
-(word + char n-grams) evaluado de forma honesta para medir su generalización real.
+(word + char n-grams). Se evalúa con rigor (split por familias disjuntas) y se
+**valida sobre datos reales**: el dataset `deepset/prompt-injections`
+(`llm_shield.real_benchmark`, 0,92 accuracy / 0,98 ROC-AUC).
